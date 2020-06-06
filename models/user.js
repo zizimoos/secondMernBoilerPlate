@@ -1,5 +1,5 @@
 const mogngoose = require("mongoose");
-const bycrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const jwt = require("jsonwebtoken");
 
@@ -37,7 +37,7 @@ userSchema.pre("save", function (next) {
   if (user.isModified("password")) {
     bcrypt.genSalt(saltRounds, (error, salt) => {
       if (error) return next(error);
-      bycrypt.hash(user.password, salt, function (error, hash) {
+      bcrypt.hash(user.password, salt, function (error, hash) {
         if (error) return next(error);
         user.password = hash;
         next();
@@ -48,23 +48,36 @@ userSchema.pre("save", function (next) {
   }
 });
 
-userSchema.methods.comparePassword = (plainPassword, cb) => {
-  bycrypt.compare(plainPassword, this.password, (error, isMatch) => {
-    if (error) {
-      return cb(error);
-    }
+userSchema.methods.comparePassword = function (plainPassword, cb) {
+  bcrypt.compare(plainPassword, this.password, function (error, isMatch) {
+    if (error) return cb(error);
     cb(null, isMatch);
   });
 };
-userSchema.methods.generateToken = (cb) => {
+
+userSchema.methods.generateToken = function (cb) {
   let user = this;
   let token = jwt.sign(user._id.toHexString(), "secret");
   user.token = token;
-  user.save((error, user) => {
-    if (error) {
-      return cb(error);
-    }
+  user.save(function (error, user) {
+    if (error) return cb(error);
     cb(null, user);
+  });
+};
+
+userSchema.statics.findByToken = function (token, cb) {
+  var user = this;
+  jwt.verify(token, "secret", function (error, decode) {
+    user.findOne(
+      {
+        _id: decode,
+        token: token,
+      },
+      function (error, user) {
+        if (error) return cb(error);
+        cb(null, user);
+      }
+    );
   });
 };
 
