@@ -5,7 +5,7 @@ const app = express();
 app.listen(5500, () => console.log("Now server listening"));
 mongoose
   .connect(
-    "mongodb+srv://mtubeadmin:sadalwin12!@@cluster0-d3bqq.mongodb.net/<dbname>?retryWrites=true&w=majority",
+    "mongodb+srv://mtubeadmin:sadalwin12!@@cluster0-d3bqq.mongodb.net/bcmern?retryWrites=true&w=majority",
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
