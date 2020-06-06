@@ -16,4 +16,5 @@ const userSchema = mogngoose.Schema({
   tokenExp: { type: Number },
 });
 
-export const User = mogngoose.model("User", userSchema);
+const User = mogngoose.model("User", userSchema);
+module.exports = { User };
