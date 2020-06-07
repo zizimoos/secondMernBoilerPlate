@@ -9,7 +9,8 @@ const { User } = require("./models/user");
 const { auth } = require("./middleware/auth");
 
 const app = express();
-app.listen(5500, () => console.log("Now server listening"));
+const port = process.env.PORT || 5500;
+app.listen(port, () => console.log(`Now server listening ${port}`));
 mongoose
   .connect(config.mongoURI, {
     useNewUrlParser: true,
