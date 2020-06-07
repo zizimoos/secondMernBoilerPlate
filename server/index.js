@@ -23,6 +23,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+app.get("/", (req, res) => {
+  res.json({ zizimoos: "Hello World" });
+});
+
 app.get("/api/user/auth", auth, (req, res) => {
   res.status(200).json({
     id: req._id,
